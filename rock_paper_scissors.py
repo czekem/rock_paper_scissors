@@ -1,65 +1,82 @@
-# rock_paper_scissors
+import random
 
-rock = '''
+import click
+
+rock = """
     _______
 ---'   ____)
       (_____)
       (_____)
       (____)
 ---.__(___)
-'''
+"""
 
-paper = '''
+paper = """
     _______
 ---'   ____)____
           ______)
           _______)
          _______)
 ---.__________)
-'''
+"""
 
-scissors = '''
+scissors = """
     _______
 ---'   ____)____
           ______)
        __________)
       (____)
 ---.__(___)
-'''
-
+"""
 
 game_images = [rock, paper, scissors]
 
 
-
-import random 
-
-user_choice = int(input('What do you want to choice? Type 0 for rock, 1 for paper, \n 2 for scissors.\n'))
-if user_choice >= 3 or user_choice <= 0 :
-    print(' You typed invalind numer, you loose!')
-else:
-    print(game_images[user_choice])
+def computer_choice():
+    player = random.randint(0, 2)
+    second_computer = random.randint(0, 2)
+    return player, second_computer
 
 
-    
-    
-computer_choice = random.randint(0, 2)
-
-print(f'Computer chose:')
-print(game_images[computer_choice])
-
-
-if user_choice == 0 and computer_choice == 2:
-    print('You win!')
-elif computer_choice == 0 and user_choice == 2:
-    print('You lose')
-elif user_choice > computer_choice :
-    print('You win!')
-elif computer_choice > user_choice :
-    print('You lose')
-elif computer_choice == user_choice:
-    print('It\'s a draw.')
+def interpretation(player, computer):
+    if player == 0 and computer == 2:
+        print('First player win!')
+    elif computer == 0 and player == 2:
+        print('Second player win!')
+    elif player > computer:
+        print('First player win!')
+    elif computer > player:
+        print('Second player win!')
+    elif computer == player:
+        print('It\'s a draw')
+    print(f" First player", game_images[player], "Second player", game_images[computer])
 
 
+@click.group
+def cli():
+    pass
 
-# Simple rock_paper_scissors game
+@cli.command
+def computer():
+    while True:
+        first_move = random.randint(0, 2)
+        second_move = random.randint(0, 2)
+        interpretation(first_move, second_move)
+        question = input('Do you want to play again? Write "yes" to continue.'
+                         ).lower()
+        if question != 'yes':
+            break
+
+@cli.command
+def player():
+    while True:
+        gamer_choose = int(input('What do you want to choice? Type 0 for rock, 1 for paper, \n 2 for scissors.\n'))
+        computer_choice = random.randint(0, 2)
+        interpretation(gamer_choose, computer_choice)
+        question = input('Do you want to play again? Write "yes" to continue.'
+                         ).lower()
+        if question != 'yes':
+            break
+
+if __name__ == "__main__":
+    cli()
